@@ -1,0 +1,36 @@
+#parent{
+    height: 300px;
+    width: 300px;
+    margin-left: 500px;
+    margin-top: 250px;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: 3s;
+}
+
+body{
+    perspective: 900px;
+}
+
+#parent:hover{
+    transform: rotateY(360deg);
+    
+}
+
+.classA{
+    background-color: blue;
+    height: 300px;
+    width: 300px;
+    position: absolute;
+    backface-visibility: hidden;
+    z-index: 2;
+    
+}
+
+.classB{
+    background-color: red;
+    height: 300px;
+    width: 300px;
+    position: absolute;
+    z-index: 1;
+}

@@ -1,0 +1,27 @@
+div {
+    height: 500px;
+    width: auto;
+}
+
+.ball {
+    height: 100px;
+    width: 100px;
+    border-radius: 50%;
+    margin: auto;
+    background: linear-gradient(45deg, red, blue);
+    border: 5px solid black;
+    animation-name: bounce;
+    animation-duration: 1s; /* Shorter duration for visible bouncing */
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+@keyframes bounce {
+    0% {
+        transform: translateY(0px);
+    }
+    100% {
+        transform: translateY(85vh) rotate(360deg); /* Added rotation for a nice effect */
+    }
+}
