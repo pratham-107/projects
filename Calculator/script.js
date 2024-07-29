@@ -1,78 +1,110 @@
-const currDisplay = document.querySelector(".curr-display");
-const prevDisplay = document.querySelector(".prev-display");
-const number = document.querySelector(".number");
-const operands = document.querySelector(".operation");
-const clearBtn = document.querySelector(".clear");
-const delBtn = document.querySelector(".delete")
-const equalBtn = document.querySelector(".equal");
-let operation;
+// Get all the elements
+const calculator = document.querySelector('.calculator');
+const output = document.querySelector('.output');
+const prevDisplay = document.querySelector('.prev-display');
+const currDisplay = document.querySelector('.curr-display');
+const buttons = document.querySelectorAll('button');
 
-function appendNumber(number) {
-    if (number === "." && currDisplay.innerText.includes(".")) return;
-    currDisplay.innerText += number;
-}
+// Initialize variables
+let currentNumber = '';
+let previousNumber = '';
+let currentOperation = '';
 
-function chooseOperation(operand) {
-    if (currDisplay.innerText === "")return;
-    getComputedStyle(operand);
-    operation = operand;
-    currDisplay.innerText += operand;
-    prevDisplay.innerText = currDisplay.innerText;
-    currDisplay.innerText = "";
-}
+// Add event listeners to buttons
+buttons.forEach((button) => {
+  button.addEventListener('click', (e) => {
+    const buttonText = e.target.textContent;
+    const buttonClass = e.target.classList[0];
 
-function clearDisplay() {
-    currDisplay.innerText = "";
-    prevDisplay.innerText = '';
-}
-
-function compute(operand) {
-    let results;
-    const previousValue = parseFloat(prevDisplay.innerText);
-    const currentValue = parseFloat(currDisplay.innerText);
-
-    if (isNaN(previousValue) || isNaN(currentValue)) return;
-
-    switch (operation) {
-        case "+":
-            results = previousValue + currentValue;
-            break;
-            case "-":
-                results = previousValue - currentValue;
-                break;
-                case "*":
-                    results = previousValue * currentValue;
-                    break;
-                    case "/":
-                        results = previousValue / currentValue;
-                        break;
-                        default:
-                            return;
+    // Handle number buttons
+    if (buttonClass === 'number') {
+      handleNumberButton(buttonText);
     }
-    currDisplay.innerText = results;
+    // Handle operation buttons
+    else if (buttonClass === 'operation') {
+      handleOperationButton(buttonText);
+    }
+    // Handle clear button
+    else if (buttonClass === 'clear') {
+      handleClearButton();
+    }
+    // Handle delete button
+    else if (buttonClass === 'delete') {
+      handleDeleteButton();
+    }
+    // Handle equal button
+    else if (buttonClass === 'equal') {
+      handleEqualButton();
+    }
+  });
+});
+
+// Handle number button click
+function handleNumberButton(number) {
+  if (currentNumber === '0' && number === '0') return;
+  if (currentNumber.includes('.') && number === '.') return;
+  currentNumber += number;
+  currDisplay.textContent = currentNumber;
 }
 
-numbers.forEach((number)=>{
-    number.addEventListener("click", () => {
-        appendNumber(number.innerText);
-    });
-});
+// Handle operation button click
+function handleOperationButton(operation) {
+  if (currentNumber === '') return;
+  if (previousNumber!== '') {
+    handleEqualButton();
+  }
+  previousNumber = currentNumber;
+  currentOperation = operation;
+  currentNumber = '';
+  prevDisplay.textContent = `${previousNumber} ${currentOperation}`;
+  currDisplay.textContent = '';
+}
 
-operands.forEach((operand)=>{
-    operand.addEventListener("click", () => {
-        chooseOperation(operand.innerText);
-    });
-});
+// Handle clear button click
+function handleClearButton() {
+  currentNumber = '';
+  previousNumber = '';
+  currentOperation = '';
+  prevDisplay.textContent = '';
+  currDisplay.textContent = '';
+}
 
-clearBtn.addEventListener("click", ()=>{
-    clearDisplay();
-});
+// Handle delete button click
+function handleDeleteButton() {
+  currentNumber = currentNumber.slice(0, -1);
+  currDisplay.textContent = currentNumber;
+  if (currentNumber === '') {
+    currDisplay.textContent = '0';
+  }
+}
 
-equalBtn.addEventListener("click", ()=>{
-    compute();
-    prevDisplay.innerText = "";
-});
-
-delBtn.addEventListener("click", ()=>{
-    currDisplay.innerText = currDisplay.innerText.slice(0, -1);
-});
+// Handle equal button click
+function handleEqualButton() {
+  if (currentNumber === '' || previousNumber === '') return;
+  let result = 0;
+  switch (currentOperation) {
+    case '+':
+      result = parseFloat(previousNumber) + parseFloat(currentNumber);
+      break;
+    case '-':
+      result = parseFloat(previousNumber) - parseFloat(currentNumber);
+      break;
+    case '*':
+      result = parseFloat(previousNumber) * parseFloat(currentNumber);
+      break;
+    case '/':
+      if (currentNumber === '0') {
+        alert('Cannot divide by zero!');
+        return;
+      }
+      result = parseFloat(previousNumber) / parseFloat(currentNumber);
+      break;
+    default:
+      return;
+  }
+  currentNumber = result.toString();
+  prevDisplay.textContent = '';
+  currDisplay.textContent = currentNumber;
+  previousNumber = '';
+  currentOperation = '';
+}
